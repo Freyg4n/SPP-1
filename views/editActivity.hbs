@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>{{title}}</title>
+</head>
+<body>
+    {{> menu}}
+
+        {{#unless isNew}}
+            <div class="d-flex justify-content-center mt-3">
+                <form method="get">
+                    <input hidden name="id" value="{{activity.id}}">
+                    <button class="btn btn-danger" type="submit" formaction="/deleteActivity">Удалить</button>
+                </form>
+            </div>
+        {{/unless}}
+    <div class="container-fluid mt-3">
+        <form method="post" style="width: 50%">
+
+            <input hidden name="id" value="{{activity.id}}">
+
+            <div class="form-group">
+                <label for="title">Заголовок:</label>
+                <input class="form-control" name="name" value="{{activity.name}}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Описание задачи:</label>
+                <textarea class="form-control" name="description" placeholder="Описание задачи..">{{activity.description}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Дата и время начала:</label><br>
+                <input type="datetime-local" name="startDate" value="{{parseMsToDate activity.startDate}}">
+            </div>
+
+            <div class="panel-body">
+                {{#unless activity.isActive}}
+                    {{> projectInput}}
+                    <button class="btn btn-outline-primary" type="submit" formaction="/startActivity">Добавить</button>
+                {{else}}
+                    {{#unless activity.isFinished}}
+                        {{> projectInput}}
+                        <button class="btn btn-outline-primary" type="submit" formaction="/stopActivity">Завершить</button>
+                    {{else}}
+                        <div class="form-group">
+                            <label for="date">Дата и время окончания:</label><br>
+                            <input type="datetime-local" name="finishDate" value="{{parseMsToDate activity.finishDate}}">
+                        </div>
+                        {{> projectInput}}
+                        <button class="btn btn-success" type="submit" formaction="/saveActivity">Сохранить</button>
+                    {{/unless}}
+                {{/unless}}
+            </div>
+        </form>
+    </div>
+</body>
+</html>
